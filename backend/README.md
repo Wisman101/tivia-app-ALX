@@ -247,7 +247,8 @@ Add a new question.
 - category(required): the question's category.
 - difficulty(required): the question's difficulty level.
 
-Sample request: curl -X POST -H "Content-Type: application/json" -d '{"searchTerm":"title"}' http://127.0.0.1:5000/questions
+Sample request: curl -X POST -H "Content-Type: application/json" -d '{"question":"when did Queen ELizabeth die?", "answer":"2022","category":"4","difficulty":"2"}' http://127.0.0.1:5000/questions
+
 
 #### Response
 ```
@@ -263,6 +264,20 @@ Sample request: curl -X POST -H "Content-Type: application/json" -d '{"searchTer
   "current_category": "All", 
   "questions": [
     {
+      "answer": "Apollo 13", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 2, 
+      "question": "What movie earned Tom Hanks his third straight Oscar nomination, in 1996?"
+    }, 
+    {
+      "answer": "Tom Cruise", 
+      "category": 5, 
+      "difficulty": 4, 
+      "id": 4, 
+      "question": "What actor did author Anne Rice first denounce, then praise in the role of her beloved Lestat?"
+    }, 
+    {
       "answer": "Maya Angelou", 
       "category": 4, 
       "difficulty": 2, 
@@ -275,12 +290,141 @@ Sample request: curl -X POST -H "Content-Type: application/json" -d '{"searchTer
       "difficulty": 3, 
       "id": 6, 
       "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }, 
+    {
+      "answer": "Muhammad Ali", 
+      "category": 4, 
+      "difficulty": 1, 
+      "id": 9, 
+      "question": "What boxer's original name is Cassius Clay?"
+    }, 
+    {
+      "answer": "Brazil", 
+      "category": 6, 
+      "difficulty": 3, 
+      "id": 10, 
+      "question": "Which is the only team to play in every soccer World Cup tournament?"
+    }, 
+    {
+      "answer": "Uruguay", 
+      "category": 6, 
+      "difficulty": 4, 
+      "id": 11, 
+      "question": "Which country won the first ever soccer World Cup in 1930?"
+    }, 
+    {
+      "answer": "George Washington Carver", 
+      "category": 4, 
+      "difficulty": 2, 
+      "id": 12, 
+      "question": "Who invented Peanut Butter?"
+    }, 
+    {
+      "answer": "Lake Victoria", 
+      "category": 3, 
+      "difficulty": 2, 
+      "id": 13, 
+      "question": "What is the largest lake in Africa?"
+    }, 
+    {
+      "answer": "The Palace of Versailles", 
+      "category": 3, 
+      "difficulty": 3, 
+      "id": 14, 
+      "question": "In which royal palace would you find the Hall of Mirrors?"
     }
   ], 
-  "total_questions": 2
+  "total_questions": 20
 }
 
+```
 
+> DELETE /questions/{question_id}
+
+Delete a question by question Id.
+#### Query parameter
+- question_id(required): Id used to identify the question to be deleted.
+
+Sample request: curl -X DELETE  http://127.0.0.1:5000/questions/2
+
+#### Response
+```
+{
+  "deleted": 2, 
+  "success": true
+}
+
+```
+
+> GET /categories/{category_id}/questions
+
+Get questions filtered by category id.
+#### Query parameter
+- category_id(required): id used to identify the category to filter questions.
+
+Sample request:  curl http://127.0.0.1:5000/categories/1/questions
+
+#### Response
+```
+{
+  "categories": {
+    "1": "Science", 
+    "2": "Art", 
+    "3": "Geography", 
+    "4": "History", 
+    "5": "Entertainment", 
+    "6": "Sports"
+  }, 
+  "current_category": "Science", 
+  "questions": [
+    {
+      "answer": "The Liver", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 20, 
+      "question": "What is the heaviest organ in the human body?"
+    }, 
+    {
+      "answer": "Alexander Fleming", 
+      "category": 1, 
+      "difficulty": 3, 
+      "id": 21, 
+      "question": "Who discovered penicillin?"
+    }, 
+    {
+      "answer": "Blood", 
+      "category": 1, 
+      "difficulty": 4, 
+      "id": 22, 
+      "question": "Hematology is a branch of medicine involving the study of what?"
+    }
+  ], 
+  "total_questions": 3
+}
+
+```
+
+> POST /quizzes
+
+Endpoint to play the game, returns a random question that hasn't been asked before.
+#### Query parameter
+- previous_questions(required): a list of ids of the previous questions asked.
+- quiz_category(required): an object with key value pair with the category type and id.
+
+Sample request:  curl -X POST -H "Content-Type: application/json" -d '{"previous_questions":[1,2,3], "quiz_category":{"type": "sport", "id": 6}}' http://127.0.0.1:5000/quizzes
+
+
+#### Response
+```
+{
+  "question": {
+    "answer": "Brazil", 
+    "category": 6, 
+    "difficulty": 3, 
+    "id": 10, 
+    "question": "Which is the only team to play in every soccer World Cup tournament?"
+  }
+}
 ```
 
 ## Testing
