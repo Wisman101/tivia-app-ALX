@@ -22,11 +22,11 @@ def create_app(test_config=None):
     cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
     '''
-  @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
+  @DONE: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
   '''
 
     '''
-  @TODO: Use the after_request decorator to set Access-Control-Allow
+  @DONE: Use the after_request decorator to set Access-Control-Allow
   '''
 
     @app.after_request
@@ -40,7 +40,7 @@ def create_app(test_config=None):
         return response
 
     '''
-  @TODO: 
+  @DONE: 
   Create an endpoint to handle GET requests 
   for all available categories.
   '''
@@ -54,7 +54,7 @@ def create_app(test_config=None):
 
 
     '''
-  @TODO: 
+  @DONE: 
   Create an endpoint to handle GET requests for questions, 
   including pagination (every 10 questions). 
   This endpoint should return a list of questions, 
@@ -65,7 +65,7 @@ def create_app(test_config=None):
   ten questions per page and pagination at the bottom of the screen for three pages.
   Clicking on the page numbers should update the questions. 
   
-  @TODO:
+  @DONE:
   Create an endpoint to POST a new question, 
   which will require the question and answer text, 
   category, and difficulty score.
@@ -74,7 +74,7 @@ def create_app(test_config=None):
   the form will clear and the question will appear at the end of the last page
   of the questions list in the "List" tab.  
   
-  @TODO: 
+  @DONE: 
   Create a POST endpoint to get questions based on a search term. 
   It should return any questions for whom the search term 
   is a substring of the question. 
@@ -93,6 +93,8 @@ def create_app(test_config=None):
             if searchterm:
                 questions = Question.query.filter(Question.question.ilike('%{}%'.format(searchterm))).order_by(
                     Question.id).all()
+                if not questions:
+                    abort(404)
             else:
                 question = request.get_json().get("question", None)
                 answer = request.get_json().get("answer", None)
@@ -117,7 +119,7 @@ def create_app(test_config=None):
             "current_category": "All"
         })
     '''
-  @TODO: 
+  @DONE: 
   Create an endpoint to DELETE question using a question ID. 
 
   TEST: When you click the trash icon next to a question, the question will be removed.
@@ -137,7 +139,7 @@ def create_app(test_config=None):
         })
 
     '''
-  @TODO: 
+  @DONE: 
   Create a GET endpoint to get questions based on category. 
 
   TEST: In the "List" tab / main screen, clicking on one of the 
@@ -159,7 +161,7 @@ def create_app(test_config=None):
             "current_category": retrieve_categories().json['categories']["{}".format(category_id)]
         })
     '''
-  @TODO: 
+  @DONE: 
   Create a POST endpoint to get questions to play the quiz. 
   This endpoint should take category and previous question parameters 
   and return a random questions within the given category, 
@@ -171,8 +173,11 @@ def create_app(test_config=None):
   '''
     @app.route("/quizzes", methods=["POST"])
     def play_game():
-        previous_questions = request.get_json().get("previous_questions")
-        category = request.get_json().get("quiz_category")
+        previous_questions = request.get_json().get("previous_questions", None)
+        category = request.get_json().get("quiz_category", None)
+
+        if not (previous_questions and category):
+            abort(400)
 
         if category['id'] == 0:
             questions = Question.query.order_by(Question.id).all()
@@ -190,7 +195,7 @@ def create_app(test_config=None):
         })
 
     '''
-  @TODO: 
+  @DONE: 
   Create error handlers for all expected errors 
   including 404 and 422. 
   '''
@@ -225,5 +230,13 @@ def create_app(test_config=None):
             "message": "unprocessable",
             "success": False
         }), 422
+
+    @app.errorhandler(500)
+    def server_error(error):
+        return jsonify({
+            "error_code": 500,
+            "message": "Internal Server Error",
+            "success": False
+        }), 500
 
     return app
