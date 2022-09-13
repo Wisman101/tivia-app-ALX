@@ -7,7 +7,7 @@ from flaskr import create_app
 from models import setup_db, Question, Category
 
 database_name = "trivia"
-database_path = "postgres://{}:{}@{}/{}".format('postgres', 'L3g3nd%40ry',
+database_path = "postgres://{}:{}@{}/{}".format(os.getenv("DATABASE_USER"), os.getenv("DATABASE_PASSWORD"),
                                                 'localhost:5432', database_name)
 
 
